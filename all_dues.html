@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Company Wise Due Report</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    padding:20px;
+}
+h2{
+    margin-bottom:15px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+}
+th,td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+th{
+    background:#2c3e50;
+    color:#fff;
+}
+.btn{
+    padding:6px 12px;
+    border:none;
+    background:#3498db;
+    color:#fff;
+    cursor:pointer;
+    border-radius:4px;
+}
+.btn:hover{
+    background:#2980b9;
+}
+.due{
+    color:#e74c3c;
+    font-weight:bold;
+}
+.paid{
+    color:#27ae60;
+    font-weight:bold;
+}
+
+/* Modal */
+.modal{
+    display:none;
+    position:fixed;
+    top:0;left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+.modal-content{
+    background:#fff;
+    width:90%;
+    max-width:1000px;
+    margin:50px auto;
+    padding:20px;
+    border-radius:5px;
+}
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.close{
+    cursor:pointer;
+    font-size:20px;
+}
+.footer{
+    text-align:right;
+    margin-top:10px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📊 Company Wise Due Report</h2>
+
+<table id="companyTable">
+<thead>
+<tr>
+<th>Company Name</th>
+<th>Total Invoices</th>
+<th>Total Amount</th>
+<th>Paid Amount</th>
+<th>Due Amount</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<!-- MODAL -->
+<div class="modal" id="dueModal">
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 id="modalTitle"></h3>
+        <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Invoice No</th>
+                <th>Claim No</th>
+                <th>Vehicle No</th>
+                <th>Invoice Date</th>
+                <th>Invoice Amt</th>
+                <th>Paid Amt</th>
+                <th>Due Amt</th>
+            </tr>
+        </thead>
+        <tbody id="modalBody"></tbody>
+    </table>
+
+    <div class="footer">
+        Total Due: ₹ <span id="totalDue">0</span>
+    </div>
+</div>
+</div>
+
+<script>
+// ================= DUMMY DATA =================
+const invoices = [
+ {company:"HDFC Ergo", invoiceNo:"INV-1001", claimNo:"CLM-101", vehicleNo:"RJ14 AB 1234", invoiceDate:"2026-01-10", invoiceAmount:50000, paidAmount:30000},
+ {company:"HDFC Ergo", invoiceNo:"INV-1002", claimNo:"CLM-102", vehicleNo:"RJ14 XY 8899", invoiceDate:"2026-01-15", invoiceAmount:40000, paidAmount:0},
+ {company:"ICICI Lombard", invoiceNo:"INV-2001", claimNo:"CLM-201", vehicleNo:"RJ19 CD 5678", invoiceDate:"2026-01-08", invoiceAmount:60000, paidAmount:50000},
+ {company:"ICICI Lombard", invoiceNo:"INV-2002", claimNo:"CLM-202", vehicleNo:"RJ19 EF 1111", invoiceDate:"2026-01-20", invoiceAmount:30000, paidAmount:0}
+];
+
+// ================= SUMMARY =================
+function loadCompanyReport(){
+    const summary = {};
+
+    invoices.forEach(inv=>{
+        const due = inv.invoiceAmount - inv.paidAmount;
+        if(!summary[inv.company]){
+            summary[inv.company]={totalInvoices:0,totalAmount:0,paidAmount:0,dueAmount:0};
+        }
+        summary[inv.company].totalInvoices++;
+        summary[inv.company].totalAmount += inv.invoiceAmount;
+        summary[inv.company].paidAmount += inv.paidAmount;
+        summary[inv.company].dueAmount += due;
+    });
+
+    const tbody = document.querySelector("#companyTable tbody");
+    tbody.innerHTML="";
+
+    for(let company in summary){
+        const s = summary[company];
+        tbody.innerHTML += `
+        <tr>
+            <td>${company}</td>
+            <td>${s.totalInvoices}</td>
+            <td>₹${s.totalAmount}</td>
+            <td class="paid">₹${s.paidAmount}</td>
+            <td class="due">₹${s.dueAmount}</td>
+            <td>
+                <button class="btn" onclick="openModal('${company}')">
+                    <i class="fa fa-eye"></i> View
+                </button>
+            </td>
+        </tr>`;
+    }
+}
+
+// ================= MODAL =================
+function openModal(company){
+    document.getElementById("dueModal").style.display="block";
+    document.getElementById("modalTitle").innerText = company + " - Due Invoices";
+
+    const tbody = document.getElementById("modalBody");
+    tbody.innerHTML="";
+    let totalDue = 0;
+
+    invoices.filter(i => i.company===company && (i.invoiceAmount-i.paidAmount)>0)
+    .forEach(inv=>{
+        const due = inv.invoiceAmount - inv.paidAmount;
+        totalDue += due;
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${inv.invoiceNo}</td>
+            <td>${inv.claimNo}</td>
+            <td>${inv.vehicleNo}</td>
+            <td>${inv.invoiceDate}</td>
+            <td>₹${inv.invoiceAmount}</td>
+            <td class="paid">₹${inv.paidAmount}</td>
+            <td class="due">₹${due}</td>
+        </tr>`;
+    });
+
+    document.getElementById("totalDue").innerText = totalDue;
+}
+
+function closeModal(){
+    document.getElementById("dueModal").style.display="none";
+}
+
+loadCompanyReport();
+</script>
+
+</body>
+</html>

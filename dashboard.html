@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Insurance Claim Management | Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f6f9;color:#333}
+
+/* ===== HEADER ===== */
+header{
+    height:60px;
+    background:#1e293b;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    position:fixed;
+    width:100%;
+    top:0;
+    z-index:1000;
+}
+header .left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+.menu-btn{
+    font-size:20px;
+    cursor:pointer;
+}
+header .title{
+    font-weight:600;
+    font-size:18px;
+}
+header .right{
+    font-size:14px;
+}
+
+/* ===== LAYOUT ===== */
+.container{
+    display:flex;
+    margin-top:60px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:240px;
+    background:#0f172a;
+    min-height:100vh;
+    transition:.3s;
+}
+.sidebar ul{
+    list-style:none;
+    padding:15px;
+}
+.sidebar li{
+    padding:12px 15px;
+    color:#cbd5e1;
+    cursor:pointer;
+    border-radius:6px;
+    margin-bottom:6px;
+    font-size:14px;
+}
+.sidebar li i{
+    width:20px;
+}
+.sidebar li:hover, .sidebar li.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+/* ===== MAIN ===== */
+main{
+    flex:1;
+    padding:20px;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+.card{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+.card h3{
+    font-size:14px;
+    color:#6b7280;
+}
+.card p{
+    font-size:26px;
+    font-weight:600;
+    margin-top:10px;
+}
+.card i{
+    float:right;
+    font-size:30px;
+    opacity:.2;
+}
+
+/* ===== TOAST ===== */
+.toast{
+    position:fixed;
+    top:80px;
+    right:20px;
+    background:#16a34a;
+    color:#fff;
+    padding:12px 20px;
+    border-radius:6px;
+    display:none;
+    z-index:9999;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+    .sidebar{
+        position:fixed;
+        left:-240px;
+        top:60px;
+        height:100%;
+        z-index:1001;
+    }
+    .sidebar.show{
+        left:0;
+    }
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:12px;
+    margin:15px 10px 5px;
+    text-transform:uppercase;
+}
+</style>
+
+
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <div class="left">
+        <i class="fa fa-bars menu-btn" onclick="toggleMenu()"></i>
+        <div class="title">Insurance Claim System</div>
+    </div>
+    <div class="right" id="dateTime"></div>
+</header>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">Saved Successfully</div>
+
+<!-- ===== BODY ===== -->
+<div class="container">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+       <ul>
+    <!-- DASHBOARD -->
+    <li class="active">
+        <a href="dashboard.html">
+            <i class="fa fa-gauge"></i> Dashboard
+        </a>
+    </li>
+
+    <!-- INSURANCE MASTER -->
+    <li class="menu-title">MASTERS</li>
+
+    <li>
+        <a href="add-insurance.html">
+            <i class="fa fa-building"></i> Add Insurance
+        </a>
+    </li>
+
+    <li>
+        <a href="insurance-list.html">
+            <i class="fa fa-list"></i> Insurance List
+        </a>
+    </li>
+
+    <!-- CLAIM FLOW -->
+    <li class="menu-title">CLAIMS</li>
+
+    <li>
+        <a href="claim-entry.html">
+            <i class="fa fa-car-burst"></i> Claim Entry
+        </a>
+    </li>
+
+    <li>
+        <a href="pending-payment.html">
+            <i class="fa fa-clock"></i> Pending Payments
+        </a>
+    </li>
+
+    <li>
+        <a href="payment-entry.html">
+            <i class="fa fa-money-check"></i> Payment Entry
+        </a>
+    </li>
+
+    <li>
+        <a href="completed-claims.html">
+            <i class="fa fa-check-circle"></i> Completed Claims
+        </a>
+    </li>
+</ul>
+
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <h2>Dashboard</h2>
+        <br>
+
+        <div class="cards">
+            <div class="card">
+                <i class="fa fa-folder-open"></i>
+                <h3>Total Claims</h3>
+                <p>128</p>
+            </div>
+
+            <div class="card">
+                <i class="fa fa-hourglass-half"></i>
+                <h3>Pending Claims</h3>
+                <p>24</p>
+            </div>
+
+            <div class="card">
+                <i class="fa fa-wallet"></i>
+                <h3>Pending Payments</h3>
+                <p>₹ 3,40,000</p>
+            </div>
+
+            <div class="card">
+                <i class="fa fa-circle-check"></i>
+                <h3>Completed Claims</h3>
+                <p>78</p>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+function toggleMenu(){
+    document.getElementById('sidebar').classList.toggle('show');
+}
+
+/* Real Time Date & Time */
+function updateDateTime(){
+    const now = new Date();
+    const date = now.toLocaleDateString('en-IN',{
+        day:'2-digit',month:'short',year:'numeric'
+    });
+    const time = now.toLocaleTimeString();
+    document.getElementById('dateTime').innerText = date + " | " + time;
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+/* Toast */
+function showToast(msg){
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.style.display='block';
+    setTimeout(()=>toast.style.display='none',2500);
+}
+
+// demo toast
+setTimeout(()=>showToast("Dashboard Loaded"),800);
+</script>
+
+</body>
+</html>
+

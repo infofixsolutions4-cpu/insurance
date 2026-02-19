@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Insurance Claim Manager (Demo)</title>
+
+<style>
+body{font-family:Arial;background:#f4f6f8;margin:0;padding:20px}
+h2{margin-top:30px}
+.card{background:#fff;padding:15px;margin-bottom:20px;border-radius:6px}
+input,select,button{padding:6px;margin:4px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+th{background:#eee}
+</style>
+</head>
+
+<body>
+
+<h1>🚗 Insurance Claim Payment System (Demo)</h1>
+
+<!-- VEHICLE ENTRY -->
+<div class="card">
+<h2>1️⃣ Vehicle / Claim Entry</h2>
+<input id="vehicleNo" placeholder="Vehicle No">
+<input id="customerName" placeholder="Customer Name">
+<select id="company">
+  <option value="">Insurance Company</option>
+  <option>ICICI</option>
+  <option>HDFC</option>
+  <option>TATA AIG</option>
+</select>
+<input id="estimate" type="number" placeholder="Estimate Amount">
+<input id="approved" type="number" placeholder="Approved Amount">
+<button onclick="addClaim()">Add Claim</button>
+</div>
+
+<!-- PAYMENT ENTRY -->
+<div class="card">
+<h2>2️⃣ Insurance Payment Receive</h2>
+<select id="payCompany">
+  <option>ICICI</option>
+  <option>HDFC</option>
+  <option>TATA AIG</option>
+</select>
+<input id="payVehicle" placeholder="Vehicle No">
+<input id="payAmount" type="number" placeholder="Amount Received">
+<button onclick="addPayment()">Add Payment</button>
+</div>
+
+<!-- CLAIM LIST -->
+<div class="card">
+<h2>📋 Vehicle Claim List</h2>
+<table>
+<thead>
+<tr>
+<th>Vehicle</th>
+<th>Company</th>
+<th>Estimate</th>
+<th>Approved</th>
+<th>Received</th>
+<th>Pending</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="claimTable"></tbody>
+</table>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
